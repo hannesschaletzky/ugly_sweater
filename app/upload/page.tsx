@@ -2,14 +2,14 @@
 "use client";
 
 export default function Page() {
-  async function checkUpload() {
+  async function upload() {
     const fileInput = document.getElementById("picture");
     if (fileInput) {
       for (const file of fileInput.files) {
-        console.log(URL.createObjectURL(file));
+        // console.log(URL.createObjectURL(file));
 
         let payload = new FormData();
-        payload.append("photo", file);
+        payload.append("file", file);
         payload.append("user", "hannes");
 
         const response = await fetch("/api/image", {
@@ -28,8 +28,9 @@ export default function Page() {
     });
     const body = await response.json();
     console.log(body);
-    let imgTag = document.getElementById("preview") as HTMLImageElement;
-    imgTag.src = URL.createObjectURL(body);
+
+    // let imgTag = document.getElementById("preview") as HTMLImageElement;
+    // imgTag.src = URL.createObjectURL(body);
   }
 
   return (
@@ -37,7 +38,7 @@ export default function Page() {
       <h1>Hello from Upload Page!</h1>
       <div
         className="p-8 border-black border-2 cursor-pointer w-32 bg-gray-300"
-        onClick={() => checkUpload()}
+        onClick={() => upload()}
       >
         Upload Photo
       </div>
