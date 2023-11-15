@@ -1,5 +1,11 @@
 "use client";
 
+declare global {
+  interface HTMLElement {
+    files: any;
+  }
+}
+
 export default function Page() {
   async function upload() {
     const fileInput = document.getElementById("picture");

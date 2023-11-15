@@ -5,6 +5,16 @@ import { NextResponse } from "next/server";
 
 var dir = path.join(process.cwd(), "public/uploads");
 
+declare global {
+  interface String {
+    arrayBuffer: () => Promise<Buffer>;
+  }
+
+  interface String {
+    name: String;
+  }
+}
+
 // https://stackoverflow.com/questions/72663673/how-do-i-get-uploaded-image-in-next-js-and-save-it
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -33,20 +43,20 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  const files = getFiles(dir);
-  console.log(files);
-  return NextResponse.json(files);
+  // const files = getFiles(dir);
+  // console.log(files);
+  return NextResponse.json("files");
 }
 
-function getFiles(dir: fs.PathLike, files = []) {
-  const fileList = fs.readdirSync(dir);
-  for (const file of fileList) {
-    const name = `${dir}/${file}`;
-    if (fs.statSync(name).isDirectory()) {
-      getFiles(name, files);
-    } else {
-      files.push(name);
-    }
-  }
-  return files;
-}
+// function getFiles(dir: fs.PathLike, files = []) {
+//   const fileList = fs.readdirSync(dir);
+//   for (const file of fileList) {
+//     const name = `${dir}/${file}`;
+//     if (fs.statSync(name).isDirectory()) {
+//       getFiles(name, files);
+//     } else {
+//       files.push(name);
+//     }
+//   }
+//   return files;
+// }
