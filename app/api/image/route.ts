@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
     try {
       if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+        fs.mkdirSync(dir, { recursive: true });
       }
       await fs.writeFileSync(path.join(dir, filename), buffer);
       const url = path.join(dir, filename);
