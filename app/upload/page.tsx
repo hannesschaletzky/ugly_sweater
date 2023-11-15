@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 export default function Page() {
@@ -26,7 +25,7 @@ export default function Page() {
     const response = await fetch("/api/image", {
       method: "GET",
     });
-    const body = await response.json();
+    const body = await response.formData();
     console.log(body);
 
     // let imgTag = document.getElementById("preview") as HTMLImageElement;
