@@ -3,8 +3,6 @@ import fs from "fs";
 
 import { NextResponse } from "next/server";
 
-var dir = path.join(process.cwd(), "public/uploads");
-
 declare global {
   interface String {
     arrayBuffer: () => Promise<Buffer>;
@@ -14,6 +12,8 @@ declare global {
     name: String;
   }
 }
+
+var dir = path.join(process.cwd(), "tmp/uploads");
 
 // https://stackoverflow.com/questions/72663673/how-do-i-get-uploaded-image-in-next-js-and-save-it
 export async function POST(req: Request) {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         fs.mkdirSync(dir);
       }
       await fs.writeFileSync(path.join(dir, filename), buffer);
-      const url = `localhost:3000/uploads/${filename}`;
+      const url = path.join(dir, filename);
       return NextResponse.json({ Message: url, status: 201 });
     } catch (error) {
       console.error(error);
