@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-var dir = path.join(process.cwd(), "assets");
+var dir = path.join(process.cwd());
 
 // https://stackoverflow.com/questions/72663673/how-do-i-get-uploaded-image-in-next-js-and-save-it
 export async function POST(req: Request) {
