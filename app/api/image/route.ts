@@ -1,8 +1,6 @@
 import path from "path";
 import fs from "fs";
 
-import { put } from "@vercel/blob";
-
 import { NextResponse } from "next/server";
 
 declare global {
@@ -15,7 +13,7 @@ declare global {
   }
 }
 
-var dir = path.join(process.cwd());
+var dir = path.join(process.cwd(), "uploads");
 
 // https://stackoverflow.com/questions/72663673/how-do-i-get-uploaded-image-in-next-js-and-save-it
 export async function POST(req: Request) {
@@ -23,13 +21,6 @@ export async function POST(req: Request) {
   const file = formData.get("file");
   const user = formData.get("user");
   if (file && user) {
-    // const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
-    // const blob = await put(filename, file, {
-    //   access: "public",
-    // });
-    // console.log(blob);
-    // return NextResponse.json(blob);
-
     const buffer = Buffer.from(await file.arrayBuffer());
     const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
     try {
