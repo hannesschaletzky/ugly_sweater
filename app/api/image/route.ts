@@ -23,31 +23,31 @@ export async function POST(req: Request) {
   const file = formData.get("file");
   const user = formData.get("user");
   if (file && user) {
-    const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
-    const blob = await put(filename, file, {
-      access: "public",
-    });
-    console.log(blob);
-    return NextResponse.json(blob);
+    // const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
+    // const blob = await put(filename, file, {
+    //   access: "public",
+    // });
+    // console.log(blob);
+    // return NextResponse.json(blob);
 
-    //   const buffer = Buffer.from(await file.arrayBuffer());
-    //   const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
-    //   try {
-    //     if (!fs.existsSync(dir)) {
-    //       fs.mkdirSync(dir, { recursive: true });
-    //     }
-    //     await fs.writeFileSync(path.join(dir, filename), buffer);
-    //     const url = path.join(dir, filename);
-    //     return NextResponse.json({ Message: url, status: 201 });
-    //   } catch (error) {
-    //     console.error(error);
-    //     return NextResponse.json({ Message: "Failed", status: 500 });
-    //   }
-    // } else {
-    //   return NextResponse.json(
-    //     { error: "Photo and username required" },
-    //     { status: 400 }
-    //   );
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
+    try {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      await fs.writeFileSync(path.join(dir, filename), buffer);
+      const url = path.join(dir, filename);
+      return NextResponse.json({ Message: url, status: 201 });
+    } catch (error) {
+      console.error(error);
+      return NextResponse.json({ Message: "Failed", status: 500 });
+    }
+  } else {
+    return NextResponse.json(
+      { error: "Photo and username required" },
+      { status: 400 }
+    );
   }
 }
 
