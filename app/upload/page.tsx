@@ -12,11 +12,9 @@ export default function Page() {
     if (fileInput) {
       for (const file of fileInput.files) {
         // console.log(URL.createObjectURL(file));
-
         let payload = new FormData();
         payload.append("file", file);
         payload.append("user", "hannes");
-
         const response = await fetch("/api/image", {
           method: "POST",
           body: payload,
