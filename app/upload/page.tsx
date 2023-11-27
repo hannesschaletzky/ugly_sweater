@@ -119,7 +119,9 @@ export default function Page() {
               onClick={() => {
                 deleteEntry(entry.name);
               }}
-            ></div>
+            >
+              ❌
+            </div>
           </div>
         ))}
       </div>
