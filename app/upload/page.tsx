@@ -10,27 +10,31 @@ declare global {
 export default function Page() {
   async function upload() {
     try {
-      const fileInput = document.getElementById("picture");
-      if (fileInput) {
-        for (const file of fileInput.files) {
-          // console.log(URL.createObjectURL(file));
-          let payload = new FormData();
-          payload.append("file", file);
-          payload.append("user", "hannes");
-          const response = await fetch("/api/image", {
-            method: "POST",
-            body: payload,
-          });
-          const body = await response.json();
-          console.log(body);
+      const inputPhoto = document.getElementById("inputPhoto");
+      const inputName = document.getElementById(
+        "inputName"
+      ) as HTMLInputElement;
+      if (inputPhoto && inputName) {
+        const name = inputName.value;
+        if (!/^[a-zA-Z]+$/.test(name)) {
+          alert("name input field: only letters allowed");
+          return;
         }
+        if (inputPhoto.files.length != 1) {
+          alert("one photo required");
+          return;
+        }
+        let payload = new FormData();
+        payload.append("file", inputPhoto.files[0]);
+        payload.append("user", name);
+        const response = await fetch("/api/image", {
+          method: "POST",
+          body: payload,
+        });
+        const body = await response.json();
+        console.log(body);
       }
     } catch (e: any) {
-      console.log(e);
-      const errorDiv = document.getElementById("errorDiv");
-      if (errorDiv) {
-        errorDiv.innerText = e + e.stack;
-      }
       alert(e);
     }
   }
@@ -47,31 +51,28 @@ export default function Page() {
 
   return (
     <div>
-      <div id="errorDiv"></div>
-      <h1>Hello from Upload Page!</h1>
-      <div
-        className="p-8 border-black border-2 cursor-pointer w-32 bg-gray-300"
-        onClick={() => upload()}
-      >
-        Upload Photo
+      <div className="flex flex-col justify-center items-center gap-2 text-center m-8">
+        <input
+          id="inputName"
+          className="border-2 border-gray-500 p-2 rounded-md w-1/2"
+          type="text"
+          placeholder="Name..."
+        />
+        <input
+          className="[text-align-last:center]"
+          id="inputPhoto"
+          type="file"
+          name="picture"
+          accept="image/*"
+          capture="user"
+        />
+        <div
+          className="cursor-pointer p-4 rounded bg-gray-300"
+          onClick={() => upload()}
+        >
+          Upload
+        </div>
       </div>
-
-      <label htmlFor="picture">Upload:</label>
-      <input
-        id="picture"
-        type="file"
-        name="picture"
-        accept="image/*"
-        capture="user"
-      />
-      <div
-        className="p-8 border-black border-2 cursor-pointer w-32 bg-gray-500"
-        onClick={() => getPhoto()}
-      >
-        Get Photo
-      </div>
-
-      <img id="preview" alt="" width={300} height={300} />
     </div>
   );
 }

@@ -13,10 +13,11 @@ declare global {
   }
 }
 
+// DID NOT FIX
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: "20mb",
+      sizeLimit: "10mb",
     },
   },
 };
