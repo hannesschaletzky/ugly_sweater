@@ -29,7 +29,10 @@ export async function POST(req: Request) {
       }
       await fs.writeFileSync(path.join(dir, filename), buffer);
       const url = path.join(dir, filename);
-      return NextResponse.json({ Message: url, status: 201 });
+      return NextResponse.json({
+        Message: url,
+        status: 201,
+      });
     } catch (error) {
       console.error(error);
       return NextResponse.json({ Message: "Failed", status: 500 });
@@ -43,20 +46,10 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  // const files = getFiles(dir);
-  // console.log(files);
-  return NextResponse.json("files");
+  const filePath = path.join(dir, "test.png");
+  const buffer = fs.readFileSync(filePath);
+  const imgBase64 = buffer.toString("base64");
+  return NextResponse.json(imgBase64, {
+    status: 200,
+  });
 }
-
-// function getFiles(dir: fs.PathLike, files = []) {
-//   const fileList = fs.readdirSync(dir);
-//   for (const file of fileList) {
-//     const name = `${dir}/${file}`;
-//     if (fs.statSync(name).isDirectory()) {
-//       getFiles(name, files);
-//     } else {
-//       files.push(name);
-//     }
-//   }
-//   return files;
-// }

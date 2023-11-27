@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 declare global {
@@ -11,7 +12,7 @@ export default function Page() {
     const fileInput = document.getElementById("picture");
     if (fileInput) {
       for (const file of fileInput.files) {
-        // console.log(URL.createObjectURL(file));
+        console.log(URL.createObjectURL(file));
         let payload = new FormData();
         payload.append("file", file);
         payload.append("user", "hannes");
@@ -29,11 +30,10 @@ export default function Page() {
     const response = await fetch("/api/image", {
       method: "GET",
     });
-    const body = await response.formData();
-    console.log(body);
-
-    // let imgTag = document.getElementById("preview") as HTMLImageElement;
-    // imgTag.src = URL.createObjectURL(body);
+    // will receive base64 representation of image
+    const img = await response.json();
+    let imgTag = document.getElementById("preview") as HTMLImageElement;
+    imgTag.src = "data:image/png;base64, " + img;
   }
 
   return (
@@ -61,7 +61,7 @@ export default function Page() {
         Get Photo
       </div>
 
-      <img id="preview" src="" alt="" width={300} height={300} />
+      <img id="preview" alt="" width={300} height={300} />
     </div>
   );
 }
