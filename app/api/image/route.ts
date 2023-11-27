@@ -13,6 +13,14 @@ declare global {
   }
 }
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "20mb",
+    },
+  },
+};
+
 var dir = path.join(process.cwd(), "uploads");
 
 // https://stackoverflow.com/questions/72663673/how-do-i-get-uploaded-image-in-next-js-and-save-it

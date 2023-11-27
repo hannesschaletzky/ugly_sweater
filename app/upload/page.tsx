@@ -13,7 +13,7 @@ export default function Page() {
       const fileInput = document.getElementById("picture");
       if (fileInput) {
         for (const file of fileInput.files) {
-          console.log(URL.createObjectURL(file));
+          // console.log(URL.createObjectURL(file));
           let payload = new FormData();
           payload.append("file", file);
           payload.append("user", "hannes");
@@ -31,7 +31,7 @@ export default function Page() {
       if (errorDiv) {
         errorDiv.innerText = e + e.stack;
       }
-      alert(e.stack);
+      alert(e);
     }
   }
 
