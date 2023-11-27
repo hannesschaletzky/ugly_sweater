@@ -29,9 +29,9 @@ export default function Page() {
       console.log(e);
       const errorDiv = document.getElementById("errorDiv");
       if (errorDiv) {
-        errorDiv.innerText = e;
+        errorDiv.innerText = e + e.stack;
       }
-      alert(e);
+      alert(e.stack);
     }
   }
 
