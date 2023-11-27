@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import Spinner from "../components/spinner";
+
 declare global {
   interface HTMLElement {
     files: any;
@@ -24,6 +26,7 @@ export default function Page() {
           alert("one photo required");
           return;
         }
+        setLoading(true);
         let payload = new FormData();
         payload.append("file", inputPhoto.files[0]);
         payload.append("user", name);
@@ -33,6 +36,7 @@ export default function Page() {
         });
         const body = await response.json();
         console.log(body);
+        setLoading(false);
         if (body.status == 201) {
           alert("✅");
           window.location.reload();
@@ -43,6 +47,11 @@ export default function Page() {
     } catch (e: any) {
       alert(e);
     }
+  }
+
+  function setLoading(state: boolean) {
+    const spinner = document.getElementById("loadingSpinner");
+    if (spinner) spinner.hidden = !state;
   }
 
   async function getPhoto() {
@@ -76,6 +85,9 @@ export default function Page() {
           onClick={() => upload()}
         >
           Upload
+        </div>
+        <div id="loadingSpinner" hidden>
+          <Spinner></Spinner>
         </div>
       </div>
     </div>
