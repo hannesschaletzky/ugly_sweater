@@ -9,20 +9,29 @@ declare global {
 
 export default function Page() {
   async function upload() {
-    const fileInput = document.getElementById("picture");
-    if (fileInput) {
-      for (const file of fileInput.files) {
-        console.log(URL.createObjectURL(file));
-        let payload = new FormData();
-        payload.append("file", file);
-        payload.append("user", "hannes");
-        const response = await fetch("/api/image", {
-          method: "POST",
-          body: payload,
-        });
-        const body = await response.json();
-        console.log(body);
+    try {
+      const fileInput = document.getElementById("picture");
+      if (fileInput) {
+        for (const file of fileInput.files) {
+          console.log(URL.createObjectURL(file));
+          let payload = new FormData();
+          payload.append("file", file);
+          payload.append("user", "hannes");
+          const response = await fetch("/api/image", {
+            method: "POST",
+            body: payload,
+          });
+          const body = await response.json();
+          console.log(body);
+        }
       }
+    } catch (e: any) {
+      console.log(e);
+      const errorDiv = document.getElementById("errorDiv");
+      if (errorDiv) {
+        errorDiv.innerText = e;
+      }
+      alert(e);
     }
   }
 
@@ -38,6 +47,7 @@ export default function Page() {
 
   return (
     <div>
+      <div id="errorDiv"></div>
       <h1>Hello from Upload Page!</h1>
       <div
         className="p-8 border-black border-2 cursor-pointer w-32 bg-gray-300"
