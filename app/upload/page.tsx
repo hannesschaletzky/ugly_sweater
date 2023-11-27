@@ -33,6 +33,12 @@ export default function Page() {
         });
         const body = await response.json();
         console.log(body);
+        if (body.status == 201) {
+          alert("✅");
+          window.location.reload();
+        } else {
+          alert(body);
+        }
       }
     } catch (e: any) {
       alert(e);
@@ -59,7 +65,6 @@ export default function Page() {
           placeholder="Name..."
         />
         <input
-          className="[text-align-last:center]"
           id="inputPhoto"
           type="file"
           name="picture"
