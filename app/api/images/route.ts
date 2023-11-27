@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
-
 import { NextResponse } from "next/server";
+import { save, exists, getAll } from "@/app/db";
 
 declare global {
   interface String {
@@ -13,23 +13,20 @@ declare global {
   }
 }
 
-// DID NOT FIX
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "10mb",
-    },
-  },
-};
-
 var dir = path.join(process.cwd(), "uploads");
 
 // https://stackoverflow.com/questions/72663673/how-do-i-get-uploaded-image-in-next-js-and-save-it
 export async function POST(req: Request) {
   const formData = await req.formData();
   const file = formData.get("file");
-  const user = formData.get("user");
+  const user = formData.get("user") as string;
   if (file && user) {
+    if (await exists(user)) {
+      return NextResponse.json({
+        message: `${user} already exists`,
+        status: 400,
+      });
+    }
     const buffer = Buffer.from(await file.arrayBuffer());
     const filename = `${user}_${Date.now()}_${file.name.replaceAll(" ", "_")}`;
     try {
@@ -37,14 +34,15 @@ export async function POST(req: Request) {
         fs.mkdirSync(dir, { recursive: true });
       }
       await fs.writeFileSync(path.join(dir, filename), buffer);
-      const url = path.join(dir, filename);
+      save(user, filename);
+      const allEntries = getAll();
       return NextResponse.json({
-        Message: url,
+        message: allEntries,
         status: 201,
       });
     } catch (error) {
       console.error(error);
-      return NextResponse.json({ Message: "Failed", status: 500 });
+      return NextResponse.json({ message: "Failed", status: 500 });
     }
   } else {
     return NextResponse.json(

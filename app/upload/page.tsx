@@ -2,6 +2,7 @@
 "use client";
 
 import Spinner from "../components/spinner";
+import { useEffect, useState } from "react";
 
 declare global {
   interface HTMLElement {
@@ -10,6 +11,18 @@ declare global {
 }
 
 export default function Page() {
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/db")
+      .then((res) => res.json())
+      .then((body) => {
+        console.log(body);
+        setEntries(Object.values(body));
+      });
+  }, []);
+
   async function upload() {
     try {
       const inputPhoto = document.getElementById("inputPhoto");
@@ -30,18 +43,17 @@ export default function Page() {
         let payload = new FormData();
         payload.append("file", inputPhoto.files[0]);
         payload.append("user", name);
-        const response = await fetch("/api/image", {
+        const response = await fetch("/api/images", {
           method: "POST",
           body: payload,
         });
         const body = await response.json();
-        console.log(body);
         setLoading(false);
         if (body.status == 201) {
           alert("✅");
           window.location.reload();
         } else {
-          alert(body);
+          alert(`${body.status}, ${body.message}`);
         }
       }
     } catch (e: any) {
@@ -49,9 +61,16 @@ export default function Page() {
     }
   }
 
-  function setLoading(state: boolean) {
-    const spinner = document.getElementById("loadingSpinner");
-    if (spinner) spinner.hidden = !state;
+  async function deleteEntry(name: string) {
+    await fetch(`/api/db?name=${name}`, {
+      method: "DELETE",
+    })
+      .catch((e) => {
+        alert(e);
+      })
+      .finally(() => {
+        window.location.reload();
+      });
   }
 
   async function getPhoto() {
@@ -66,7 +85,7 @@ export default function Page() {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-center gap-2 text-center m-8">
+      <div className="flex flex-col justify-center items-center gap-2 m-4">
         <input
           id="inputName"
           className="border-2 border-gray-500 p-2 rounded-md w-1/2"
@@ -81,14 +100,28 @@ export default function Page() {
           capture="user"
         />
         <div
-          className="cursor-pointer p-4 rounded bg-gray-300"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4"
           onClick={() => upload()}
         >
           Upload
         </div>
-        <div id="loadingSpinner" hidden>
-          <Spinner></Spinner>
-        </div>
+        {loading && <Spinner />}
+        {entries.length}
+        {entries.map((entry, i) => (
+          <div
+            className="flex justify-center items-center gap-1"
+            key={crypto.randomUUID()}
+          >
+            <div key={crypto.randomUUID()}>{entry.name}</div>
+            <div
+              className=" hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              key={crypto.randomUUID()}
+              onClick={() => {
+                deleteEntry(entry.name);
+              }}
+            ></div>
+          </div>
+        ))}
       </div>
     </div>
   );
