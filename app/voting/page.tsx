@@ -7,8 +7,16 @@ import { useEffect, useState } from "react";
 export default function Voting() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(false);
+  const [remainingUpvotes, setRemainingUpvotes] = useState(3);
 
   useEffect(() => {
+    const remainingUpvotes = localStorage.getItem("remainingUpvotes");
+    if (remainingUpvotes) {
+      setRemainingUpvotes(Number(remainingUpvotes));
+    } else {
+      localStorage.setItem("remainingUpvotes", "3");
+    }
+
     fetch("/api/db")
       .then((res) => res.json())
       .then(async (body) => {
@@ -37,9 +45,16 @@ export default function Voting() {
     });
     if (response.ok) {
       console.log("Upvote ok!");
+      localStorage.setItem(
+        "remainingUpvotes",
+        (remainingUpvotes - 1).toString()
+      );
+      alert("✅ Upvote saved! Reloading...");
     } else {
       console.log("Upvote failed!");
+      alert("❌ upvote failed");
     }
+    window.location.reload();
   }
 
   return (
@@ -49,19 +64,32 @@ export default function Voting() {
           <img src={entry.base64img} alt={entry.name} />
           <div className="flex justify-around items-center px-8 py-2">
             <div>
-              <div>{entry.name}</div>
-              <div>{entry.upvotes} 👍</div>
+              <div className="text-md">{entry.name}</div>
+
+              <div className="font-semibold ">{entry.upvotes} 👍</div>
+            </div>
+
+            <div>
+              {remainingUpvotes == 0 && (
+                <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded my-4">
+                  <s>Upvote!</s> <br />
+                  {remainingUpvotes} 👍 left
+                </button>
+              )}
+              {remainingUpvotes > 0 && (
+                <button
+                  onClick={() => {
+                    upvote(entry.name);
+                  }}
+                  className="bg-blue-500 text-white font-bold py-2 px-4 rounded my-4"
+                >
+                  Upvote! <br />
+                  {remainingUpvotes} 👍 left
+                </button>
+              )}
             </div>
             <div>
-              <button
-                onClick={() => {
-                  upvote(entry.name);
-                }}
-                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-6 border border-gray-400 rounded shadow"
-              >
-                👍
-              </button>
-              <div>votes left: 3</div>
+              <b>{i + 1}</b> of <b>{entries.length}</b>
             </div>
           </div>
         </section>
