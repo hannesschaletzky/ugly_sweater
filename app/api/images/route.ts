@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { NextResponse } from "next/server";
-import { save, exists, getAll } from "@/app/db";
+import { saveEntry, exists } from "@/app/db";
 
 declare global {
   interface String {
@@ -34,16 +34,14 @@ export async function POST(req: Request) {
         fs.mkdirSync(dir, { recursive: true });
       }
       await fs.writeFileSync(path.join(dir, filename), buffer);
-      // let url = "";
-      // if (process.env.NODE_ENV == "development") {
-      //   url = `localhost:3000/api/images?filename=${filename}`;
-      // } else if (process.env.NODE_ENV == "production") {
-      //   url = `ugly.hschaletzky.de/api/images?filename=${filename}`;
-      // }
-      save(user, filename);
-      const allEntries = getAll();
+      const entry: Entry = {
+        name: user,
+        filename: filename,
+        upvotes: 0,
+        base64img: "",
+      };
+      await saveEntry(entry);
       return NextResponse.json({
-        message: allEntries,
         status: 201,
       });
     } catch (error) {

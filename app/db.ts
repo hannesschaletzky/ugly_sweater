@@ -2,8 +2,14 @@ import { JsonDB, Config } from "node-json-db";
 
 const db = new JsonDB(new Config("entries", true, false, "/"));
 
-export async function save(name: string, filename: string) {
-  await db.push(`/${name}`, { name: name, filename: filename, upvotes: 0 });
+export async function upvote(name: string) {
+  let entry: Entry = await getEntry(name);
+  entry.upvotes++;
+  saveEntry(entry);
+}
+
+export async function saveEntry(entry: Entry) {
+  await db.push(`/${entry.name}`, entry);
 }
 
 export async function getAll() {

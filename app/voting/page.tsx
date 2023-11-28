@@ -31,11 +31,39 @@ export default function Voting() {
     return "data:image/png;base64, " + img;
   }
 
+  async function upvote(name: string) {
+    const response = await fetch(`/api/db/upvote?name=${name}`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      console.log("Upvote ok!");
+    } else {
+      console.log("Upvote failed!");
+    }
+  }
+
   return (
     <div className="slider">
       {entries.map((entry, i) => (
         <section key={crypto.randomUUID()}>
           <img src={entry.base64img} alt={entry.name} />
+          <div className="flex justify-between items-center px-8 py-2">
+            <div>
+              <div>{entry.name}</div>
+              <div>{entry.upvotes} 👍</div>
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  upvote(entry.name);
+                }}
+                className="text-3xl bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow"
+              >
+                👍
+              </button>
+              <div>votes left: 3</div>
+            </div>
+          </div>
         </section>
       ))}
     </div>
