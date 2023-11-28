@@ -47,7 +47,7 @@ export default function Voting() {
       {entries.map((entry, i) => (
         <section key={crypto.randomUUID()}>
           <img src={entry.base64img} alt={entry.name} />
-          <div className="flex justify-between items-center px-8 py-2">
+          <div className="flex justify-around items-center px-8 py-2">
             <div>
               <div>{entry.name}</div>
               <div>{entry.upvotes} 👍</div>
@@ -57,7 +57,7 @@ export default function Voting() {
                 onClick={() => {
                   upvote(entry.name);
                 }}
-                className="text-3xl bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 border border-gray-400 rounded shadow"
+                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-6 border border-gray-400 rounded shadow"
               >
                 👍
               </button>

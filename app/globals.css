@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  overflow-y: hidden;
+}
+
 /* https://css-tricks.com/practical-css-scroll-snapping/#aa-example-4-horizontal-full-screen */
 .slider {
   font-family: sans-serif;
