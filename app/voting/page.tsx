@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { randomUUID } from "crypto";
 import { useEffect, useState } from "react";
 
 export default function Voting() {
@@ -31,16 +32,11 @@ export default function Voting() {
   }
 
   return (
-    <div>
-      <h1>Voting!</h1>
+    <div className="slider">
       {entries.map((entry, i) => (
-        <div
-          className="flex justify-center items-center gap-1"
-          key={crypto.randomUUID()}
-        >
-          <div key={crypto.randomUUID()}>{entry.name}</div>
-          <img src={entry.base64img} alt="" />
-        </div>
+        <section key={crypto.randomUUID()}>
+          <img src={entry.base64img} alt={entry.name} />
+        </section>
       ))}
     </div>
   );

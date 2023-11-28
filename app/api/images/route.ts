@@ -59,7 +59,6 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: any) {
-  console.log(req.nextUrl.searchParams);
   if (req.nextUrl.searchParams.get("filename") == null) {
     return NextResponse.json("filename query param required", {
       status: 400,
