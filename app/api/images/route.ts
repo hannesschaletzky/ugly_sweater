@@ -34,6 +34,12 @@ export async function POST(req: Request) {
         fs.mkdirSync(dir, { recursive: true });
       }
       await fs.writeFileSync(path.join(dir, filename), buffer);
+      // let url = "";
+      // if (process.env.NODE_ENV == "development") {
+      //   url = `localhost:3000/api/images?filename=${filename}`;
+      // } else if (process.env.NODE_ENV == "production") {
+      //   url = `ugly.hschaletzky.de/api/images?filename=${filename}`;
+      // }
       save(user, filename);
       const allEntries = getAll();
       return NextResponse.json({
@@ -52,8 +58,15 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
-  const filePath = path.join(dir, "test.png");
+export async function GET(req: any) {
+  console.log(req.nextUrl.searchParams);
+  if (req.nextUrl.searchParams.get("filename") == null) {
+    return NextResponse.json("filename query param required", {
+      status: 400,
+    });
+  }
+  const filename = req.nextUrl.searchParams.get("filename") as string;
+  const filePath = path.join(dir, filename);
   const buffer = fs.readFileSync(filePath);
   const imgBase64 = buffer.toString("base64");
   return NextResponse.json(imgBase64, {

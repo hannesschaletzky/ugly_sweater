@@ -14,6 +14,10 @@ export async function deleteEntry(name: string) {
   return db.delete(`/${name}`);
 }
 
+export async function getEntry(name: string) {
+  return db.getData(`/${name}`);
+}
+
 export async function exists(name: string) {
   return db.exists(`/${name}`);
 }

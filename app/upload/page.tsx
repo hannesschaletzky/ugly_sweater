@@ -30,9 +30,9 @@ export default function Page() {
         "inputName"
       ) as HTMLInputElement;
       if (inputPhoto && inputName) {
-        const name = inputName.value;
+        const name = inputName.value.trim();
         if (!/^[a-zA-Z]+$/.test(name)) {
-          alert("name input field: only letters allowed");
+          alert("name input field: only letters a-zA-Z allowed");
           return;
         }
         if (inputPhoto.files.length != 1) {
@@ -73,16 +73,6 @@ export default function Page() {
       });
   }
 
-  async function getPhoto() {
-    const response = await fetch("/api/image", {
-      method: "GET",
-    });
-    // will receive base64 representation of image
-    const img = await response.json();
-    let imgTag = document.getElementById("preview") as HTMLImageElement;
-    imgTag.src = "data:image/png;base64, " + img;
-  }
-
   return (
     <div>
       <div className="flex flex-col justify-center items-center gap-2 m-4">
@@ -100,7 +90,7 @@ export default function Page() {
           capture="user"
         />
         <div
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4"
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded my-4"
           onClick={() => upload()}
         >
           Upload
@@ -114,7 +104,7 @@ export default function Page() {
           >
             <div key={crypto.randomUUID()}>{entry.name}</div>
             <div
-              className=" hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+              className=" text-white font-bold py-2 px-4 rounded-full"
               key={crypto.randomUUID()}
               onClick={() => {
                 deleteEntry(entry.name);
