@@ -111,7 +111,7 @@ export default function Voting() {
 
                 <div>
                   {remainingUpvotes == 0 && (
-                    <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded my-4 shadow-lg shadow-cyan-500/50">
+                    <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded my-4">
                       <s>Upvote!</s> <br />
                       {remainingUpvotes} 👍 left
                     </button>
