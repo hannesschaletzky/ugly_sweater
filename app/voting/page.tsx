@@ -68,9 +68,16 @@ export default function Voting() {
       alert("✅ Upvote saved! Reloading...");
     } else {
       console.log("Upvote failed!");
-      alert("❌ upvote failed");
+      alert("❌ Upvote failed");
     }
     window.location.reload();
+  }
+
+  function scrollTo(id: number) {
+    const element = document.getElementById(id.toString());
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   return (
@@ -79,9 +86,11 @@ export default function Voting() {
         <>
           <div className="flex flex-col items-center justify-center w-screen h-screen gap-3">
             <Spinner />
-            <div>
-              {photosFetched} of {amountPhotos} loaded...
-            </div>
+            {amountPhotos > 0 && (
+              <div>
+                {photosFetched} of {amountPhotos} loaded...
+              </div>
+            )}
             <div>Sorry for the wait 😇</div>
           </div>
         </>
@@ -89,7 +98,7 @@ export default function Voting() {
       {!loading && (
         <div className="slider">
           {entries.map((entry, i) => (
-            <section key={crypto.randomUUID()}>
+            <section key={crypto.randomUUID()} id={i.toString()}>
               <img src={entry.base64img} alt={entry.name} />
               <div className="flex justify-around items-center px-8 py-2">
                 <div>
@@ -117,8 +126,25 @@ export default function Voting() {
                     </button>
                   )}
                 </div>
-                <div>
+                <div className="text-xl">
                   <b>{i + 1}</b> of <b>{entries.length}</b>
+                  <div className="text-2xl flex">
+                    <div
+                      onClick={() => {
+                        scrollTo(i - 1);
+                      }}
+                    >
+                      ⬅️
+                    </div>
+                    &nbsp;&nbsp;
+                    <div
+                      onClick={() => {
+                        scrollTo(i + 1);
+                      }}
+                    >
+                      ➡️
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
