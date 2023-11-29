@@ -100,9 +100,9 @@ export default function Voting() {
           {entries.map((entry, i) => (
             <section key={crypto.randomUUID()} id={i.toString()}>
               <img src={entry.base64img} alt={entry.name} />
-              <div className="flex justify-around items-center px-8 py-2 drop-shadow-xl">
+              <div className="flex justify-around items-center px-8 py-2">
                 <div>
-                  <div className="text-lg font-bold">{entry.name}</div>
+                  <div className="text-lg font-bold ">{entry.name}</div>
 
                   <div className="font-semibold text-2xl">
                     {entry.upvotes} 👍
@@ -111,7 +111,7 @@ export default function Voting() {
 
                 <div>
                   {remainingUpvotes == 0 && (
-                    <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded my-4">
+                    <button className="bg-blue-200 text-white font-bold py-2 px-4 rounded my-4 shadow-lg shadow-cyan-500/50">
                       <s>Upvote!</s> <br />
                       {remainingUpvotes} 👍 left
                     </button>
@@ -121,14 +121,14 @@ export default function Voting() {
                       onClick={() => {
                         upvote(entry.name);
                       }}
-                      className="bg-blue-500 text-white font-bold py-2 px-4 rounded my-4"
+                      className="bg-blue-500 text-white font-bold py-2 px-4 rounded my-4 shadow-lg shadow-cyan-500/50"
                     >
                       Upvote! <br />
                       {remainingUpvotes} 👍 left
                     </button>
                   )}
                 </div>
-                <div className="text-xl">
+                <div className="text-xl ">
                   <b>{i + 1}</b> of <b>{entries.length}</b>
                   <div className="text-2xl flex">
                     <div
