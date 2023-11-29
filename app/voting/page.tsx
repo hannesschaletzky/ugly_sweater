@@ -100,11 +100,13 @@ export default function Voting() {
           {entries.map((entry, i) => (
             <section key={crypto.randomUUID()} id={i.toString()}>
               <img src={entry.base64img} alt={entry.name} />
-              <div className="flex justify-around items-center px-8 py-2">
+              <div className="flex justify-around items-center px-8 py-2 drop-shadow-xl">
                 <div>
-                  <div className="text-md">{entry.name}</div>
+                  <div className="text-lg font-bold">{entry.name}</div>
 
-                  <div className="font-semibold ">{entry.upvotes} 👍</div>
+                  <div className="font-semibold text-2xl">
+                    {entry.upvotes} 👍
+                  </div>
                 </div>
 
                 <div>

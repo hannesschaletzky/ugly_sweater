@@ -2,13 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* DO I REALLY WANT? */
-body {
-  overflow-y: hidden;
-}
-
 /* https://css-tricks.com/practical-css-scroll-snapping/#aa-example-4-horizontal-full-screen */
 .slider {
+  background-image: url("/chris.jpg");
+  background-size: contain;
   font-family: sans-serif;
   scroll-snap-type: x mandatory;
   display: flex;
@@ -16,12 +13,13 @@ body {
   overflow-x: scroll;
 }
 section {
-  border-right: 1px solid white;
   padding: 1rem;
   min-width: 100vw;
   height: 100dvh;
   scroll-snap-align: start;
   text-align: center;
+  color: white;
+  /* text-shadow: 1px 1px 1px white; */
   position: relative;
 }
 
