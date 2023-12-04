@@ -32,13 +32,19 @@ export default function Voting() {
         // fetch photos
         for (let i = 0; i < tempEntries.length; i++) {
           const entry = tempEntries[i];
-          // base64img; load from or save to cache
           const cachedPhoto = localStorage.getItem(entry.filename);
           if (cachedPhoto) {
+            // load from cache
             entry.base64img = cachedPhoto;
           } else {
+            // load from server
             entry.base64img = await fetchPhoto(entry.filename);
-            localStorage.setItem(entry.filename, entry.base64img);
+            // save to cache
+            try {
+              localStorage.setItem(entry.filename, entry.base64img);
+            } catch (e) {
+              console.log(entry.filename, e);
+            }
           }
         }
         // sort desc
