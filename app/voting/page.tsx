@@ -113,7 +113,8 @@ export default function Voting() {
         <>
           <div className="slider flex flex-col items-center justify-center w-screen h-screen gap-3 text-white text-xl">
             <Spinner />
-            <div>This is a loading screen</div>
+            <div>Sorry for the wait...</div>
+            <div>It is rather a prototype</div>
           </div>
         </>
       )}
