@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Spinner from "../components/spinner";
+import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
 const initialRemainingUpvotes = 3;
 const lsRemainingUpvates = "remainingUpvotes";
@@ -35,13 +36,15 @@ export default function Voting() {
           const cachedPhoto = localStorage.getItem(entry.filename);
           if (cachedPhoto) {
             // load from cache
-            entry.base64img = cachedPhoto;
+            const decompressed = decompressFromUTF16(cachedPhoto);
+            entry.base64img = decompressed;
           } else {
             // load from server
             entry.base64img = await fetchPhoto(entry.filename);
             // save to cache
             try {
-              localStorage.setItem(entry.filename, entry.base64img);
+              const compressed = compressToUTF16(entry.base64img);
+              localStorage.setItem(entry.filename, compressed);
             } catch (e) {
               console.log(entry.filename, e);
             }
@@ -95,7 +98,7 @@ export default function Voting() {
     <>
       {loading && (
         <>
-          <div className="flex flex-col items-center justify-center w-screen h-screen gap-3">
+          <div className="slider flex flex-col items-center justify-center w-screen h-screen gap-3 text-white text-xl">
             <Spinner />
             <div>Sorry for the initial wait 😇</div>
             <div>Future reloads are faster 😎</div>
