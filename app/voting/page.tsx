@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Spinner from "../components/spinner";
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
+import { useSearchParams } from "next/navigation";
 
 const initialRemainingUpvotes = 3;
 const lsRemainingUpvates = "remainingUpvotes";
@@ -14,6 +15,9 @@ export default function Voting() {
   const [remainingUpvotes, setRemainingUpvotes] = useState(
     initialRemainingUpvotes
   );
+
+  const searchParams = useSearchParams();
+  const lsEnabled = searchParams.get("ls");
 
   useEffect(() => {
     const remainingUpvotes = localStorage.getItem(lsRemainingUpvates);
@@ -33,21 +37,29 @@ export default function Voting() {
         // fetch photos
         for (let i = 0; i < tempEntries.length; i++) {
           const entry = tempEntries[i];
-          const cachedPhoto = localStorage.getItem(entry.filename);
-          if (cachedPhoto) {
-            // load from cache
-            const decompressed = decompressFromUTF16(cachedPhoto);
-            entry.base64img = decompressed;
-          } else {
-            // load from server
+
+          if (lsEnabled && lsEnabled == "0") {
+            // do not use local storage
             entry.base64img = await fetchPhoto(entry.filename);
-            // save to cache
-            try {
-              const compressed = compressToUTF16(entry.base64img);
-              localStorage.setItem(entry.filename, compressed);
-            } catch (e) {
-              console.log(entry.filename, e);
-              localStorage.removeItem(entry.filename);
+            localStorage.removeItem(entry.filename);
+          } else {
+            // use local storage
+            const cachedPhoto = localStorage.getItem(entry.filename);
+            if (cachedPhoto) {
+              // load from cache
+              const decompressed = decompressFromUTF16(cachedPhoto);
+              entry.base64img = decompressed;
+            } else {
+              // load from server
+              entry.base64img = await fetchPhoto(entry.filename);
+              // save to cache
+              try {
+                const compressed = compressToUTF16(entry.base64img);
+                localStorage.setItem(entry.filename, compressed);
+              } catch (e) {
+                console.log(entry.filename, e);
+                localStorage.removeItem(entry.filename);
+              }
             }
           }
         }
@@ -101,8 +113,7 @@ export default function Voting() {
         <>
           <div className="slider flex flex-col items-center justify-center w-screen h-screen gap-3 text-white text-xl">
             <Spinner />
-            <div>Sorry for the initial wait 😇</div>
-            <div>Trying to cache some... 😎</div>
+            <div>This is a loading screen</div>
           </div>
         </>
       )}
