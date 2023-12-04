@@ -5,23 +5,22 @@ import { useEffect, useState } from "react";
 import Spinner from "../components/spinner";
 
 const initialRemainingUpvotes = 3;
+const lsRemainingUpvates = "remainingUpvotes";
 
 export default function Voting() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [photosFetched, setPhotosFetched] = useState(0);
-  const [amountPhotos, setAmountPhotos] = useState(0);
   const [remainingUpvotes, setRemainingUpvotes] = useState(
     initialRemainingUpvotes
   );
 
   useEffect(() => {
-    const remainingUpvotes = localStorage.getItem("remainingUpvotes");
+    const remainingUpvotes = localStorage.getItem(lsRemainingUpvates);
     if (remainingUpvotes) {
       setRemainingUpvotes(Number(remainingUpvotes));
     } else {
       localStorage.setItem(
-        "remainingUpvotes",
+        lsRemainingUpvates,
         initialRemainingUpvotes.toString()
       );
     }
@@ -29,19 +28,24 @@ export default function Voting() {
     fetch("/api/db")
       .then((res) => res.json())
       .then(async (body) => {
-        const cachedEntries: Entry[] = Object.values(body);
-        setAmountPhotos(cachedEntries.length);
+        const tempEntries: Entry[] = Object.values(body);
         // fetch photos
-        for (let i = 0; i < cachedEntries.length; i++) {
-          const entry = cachedEntries[i];
-          entry.base64img = await fetchPhoto(entry.filename);
-          setPhotosFetched(photosFetched + 1);
+        for (let i = 0; i < tempEntries.length; i++) {
+          const entry = tempEntries[i];
+          // base64img; load from or save to cache
+          const cachedPhoto = localStorage.getItem(entry.filename);
+          if (cachedPhoto) {
+            entry.base64img = cachedPhoto;
+          } else {
+            entry.base64img = await fetchPhoto(entry.filename);
+            localStorage.setItem(entry.filename, entry.base64img);
+          }
         }
         // sort desc
-        cachedEntries.sort((a, b) => b.upvotes - a.upvotes);
+        tempEntries.sort((a, b) => b.upvotes - a.upvotes);
         // display
-        console.log(cachedEntries);
-        setEntries(cachedEntries);
+        console.log(tempEntries);
+        setEntries(tempEntries);
         setLoading(false);
       });
   }, []);
@@ -50,9 +54,10 @@ export default function Voting() {
     const response = await fetch(`/api/images?filename=${filename}`, {
       method: "GET",
     });
-    // will receive base64 representation of image
-    const img = await response.json();
-    return "data:image/png;base64, " + img;
+    // receives base64 representation of image
+    const base64 = await response.json();
+    // concat to valid format for html img tag
+    return "data:image/png;base64, " + base64;
   }
 
   async function upvote(name: string) {
@@ -62,7 +67,7 @@ export default function Voting() {
     if (response.ok) {
       console.log("Upvote ok!");
       localStorage.setItem(
-        "remainingUpvotes",
+        lsRemainingUpvates,
         (remainingUpvotes - 1).toString()
       );
       alert("✅ Upvote saved! Reloading...");
@@ -86,12 +91,8 @@ export default function Voting() {
         <>
           <div className="flex flex-col items-center justify-center w-screen h-screen gap-3">
             <Spinner />
-            {amountPhotos > 0 && (
-              <div>
-                {photosFetched} of {amountPhotos} loaded...
-              </div>
-            )}
-            <div>Sorry for the wait 😇</div>
+            <div>Sorry for the initial wait 😇</div>
+            <div>Future reloads are faster 😎</div>
           </div>
         </>
       )}

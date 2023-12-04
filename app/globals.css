@@ -5,7 +5,7 @@
 /* https://css-tricks.com/practical-css-scroll-snapping/#aa-example-4-horizontal-full-screen */
 .slider {
   background-image: url("/chris.jpg");
-  background-size: contain;
+  background-size: cover;
   font-family: sans-serif;
   scroll-snap-type: x mandatory;
   display: flex;
